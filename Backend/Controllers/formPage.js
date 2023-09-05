@@ -13,12 +13,44 @@ exports.postAddProduct = (req, res, next) => {
 	const email = req.body.email;
 	// const name = "mohd danish";
 	// const email = "mm107867dk@gmail.com";
-	User.create({
+	return User.create({
 		Name: name,
 		Mail: email
 	}).then((data) => {
-		return data.save();
+		return res.json(data);
 		// console.log('USER SUCCESSFULLY ADDED');
 	}).catch(err => console.log(err));
 }
 
+exports.delete = (req, res, next) => {
+	const id = req.body.id;
+	User.findByPk(id)
+		.then(data => {
+			return data.destroy();
+		})
+		.then(() => {
+			console.log('successfully deleted');
+			res.redirect('/add-user');
+		})
+		.catch(err => console.log(err));
+}
+
+// exports.getEditedUser = (req, res, next) => {
+
+// }
+exports.postEditedUser = (req, res, next) => {
+	const id = req.params.id;
+	const name = req.body.name;
+	const email = req.body.email;
+	User.findByPk(id)
+		.then(userData => {
+			userData.Name = name;
+			userData.Mail = email;
+			return userData.save();
+		})
+		.then(data => {
+			console.log(res, 'succesfully done');
+			res.json(data);
+		})
+		.catch(err => console.log(err));
+}
